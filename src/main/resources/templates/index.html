@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Huawei Lab Inventory</title>
+    <!-- Style sheets-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
+          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN"
+          crossorigin="anonymous"/>
+    <!-- Javascript-->
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="header :: header_copy"></div>
+
+<!-- All Devices -->
+<section class="p-3 bg-dark text-white mb-5" id="devices">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">All Devices</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--    Cards for all devices-->
+<section class="p-2">
+    <div class="container">
+        <div class="row g-4">
+
+            <div class="col-md-6 text-center" th:each="device : ${listAllDevices}">
+                <div class="card">
+                    <div class="row my-auto">
+                        <div class="col">
+                            <div class="card-body">
+                                <div class="accordion accordion-flush" id="deviceToDisplay">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button"
+                                                    data-bs-toggle="collapse"
+                                                    th:data-bs-target="'#device' + ${device.deviceID}">
+                                                <!-- Device name -->
+                                                [[${device.deviceName}]]
+                                            </button>
+                                        </h2>
+                                        <div th:id="'device' + ${device.deviceID}" class="accordion-collapse collapse"
+                                             th:data-bs-parent="'#device' + ${device.deviceID}">
+                                            <div class="accordion-body text-start">
+                                                <!-- Device type -->
+                                                <p class="text-uppercase my-1 h6 mb-3">
+                                                    <sub><strong>[[${device.deviceType}]]</strong></sub>
+                                                </p>
+                                                <!-- Device description -->
+                                                <p>
+                                                    [[${device.deviceDescription}]]
+                                                </p>
+                                                <!-- Number taken -->
+                                                <p class="mb-0 mt-3">Quantity:
+                                                    <span class="badge bg-secondary">[[${device.deviceQuantity}]]</span>
+                                                </p>
+                                                <p class="mb-0">Number taken:
+                                                    <span class="badge bg-dark">[[${device.numberTaken}]]</span>
+                                                </p>
+                                            </div>
+                                            <div class="h6 text-secondary">
+                                                <sub>Date modified: [[${device.dateModified}]]</sub>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ************************* All Microcontrollers ******************************* -->
+<section class="p-3 bg-secondary text-white my-5" id="microcontrollers">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">Microcontrollers</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ************************ All Microcontrollers ************************* -->
+<section class="p-2" th:each="device : ${listDevices}">
+    <div class="container">
+        <div class="row g-4">
+            <th:block th:if="${device.deviceType} == 'Microcontrollers'">
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="row my-auto">
+                            <div class="col">
+                                <div class="card-body">
+                                    <div class="accordion accordion-flush">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                        th:data-bs-target="'#microcontroller' + ${device.deviceID}">
+                                                    <!-- Device name -->
+                                                    [[${device.deviceName}]]
+                                                </button>
+                                            </h2>
+                                            <div th:id="'microcontroller' + ${device.deviceID}" class="accordion-collapse collapse"
+                                                    th:data-bs-parent="'#device' + ${device.deviceID}">
+                                                <div class="accordion-body text-start">
+                                                    <!-- Device type -->
+                                                    <p class="text-uppercase my-1 h6 mb-3">
+                                                        <sub><strong>[[${device.deviceType}]]</strong></sub>
+                                                    </p>
+                                                    <!-- Device description -->
+                                                    [[${device.deviceDescription}]]
+                                                    <!-- Number taken -->
+                                                    <p class="mb-0 mt-3">Quantity:
+                                                        <span class="badge bg-secondary">[[${device.deviceQuantity}]]</span>
+                                                    </p>
+                                                    <p class="mb-0">Number taken:
+                                                        <span class="badge bg-dark">[[${device.numberTaken}]]</span>
+                                                    </p>
+                                                </div>
+                                                <div class="h6 text-secondary">
+                                                    <sub>Date modified: [[${device.dateModified}]]</sub>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            <!-- ./End of loop -->
+        </div>
+    </div>
+</section>
+
+<!-- ************************ All Sensors ************************* -->
+<section class="p-3 bg-secondary text-white my-5" id="sensors">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">Sensors</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cards for all sensors -->
+<!--<section class="p-2">-->
+<!--    <div class="container">-->
+<!--        <div class="row g-4">-->
+<!-- Beginning of loop -->
+<!--            <?php-->
+<!--          if (mysqli_num_rows($others) == 0){-->
+<!--            echo "<p class='lead'>No device added yet.</p>";-->
+<!--            }else{-->
+<!--            while ($device = mysqli_fetch_assoc($sensors)){-->
+
+<!--            ?>-->
+<!--            <div class="col-md-6 text-center">-->
+<!--                <div class="card">-->
+<!--                    <div class="row my-auto">-->
+<!--                        <div class="col">-->
+<!--                            <div class="card-body">-->
+<!--                                <div class="accordion accordion-flush">-->
+<!--                                    <div class="accordion-item">-->
+<!--                                        <h2 class="accordion-header">-->
+<!--                                            <button-->
+<!--                                                    class="accordion-button collapsed"-->
+<!--                                                    type="button"-->
+<!--                                                    data-bs-toggle="collapse"-->
+<!--                                                    data-bs-target="#sensor<?php echo $device['device_id']; ?>"-->
+<!--                                            >-->
+<!--                                                &lt;!&ndash; Device name &ndash;&gt;-->
+<!--                                                <?php echo $device['device_name']; ?>-->
+<!--                                            </button>-->
+<!--                                        </h2>-->
+<!--                                        <div-->
+<!--                                                id="sensor<?php echo $device['device_id']; ?>"-->
+<!--                                                class="accordion-collapse collapse"-->
+<!--                                                data-bs-parent="#device<?php echo $device['device_id']; ?>"-->
+<!--                                        >-->
+<!--                                            <div class="accordion-body text-start">-->
+<!--                                                &lt;!&ndash; Device type &ndash;&gt;-->
+<!--                                                <p class="text-uppercase my-1 h6 mb-3">-->
+<!--                                                    <sub><strong><?php echo $device['device_type']; ?></strong></sub>-->
+<!--                                                </p>-->
+<!--                                                &lt;!&ndash; Device description &ndash;&gt;-->
+<!--                                                <?php echo $device['device_description']; ?>-->
+<!--                                                &lt;!&ndash; Number taken &ndash;&gt;-->
+<!--                                                <p class="mb-0 mt-3">Quantity: <span-->
+<!--                                                        class="badge bg-secondary"><?php echo $device['device_quantity']; ?></span>-->
+<!--                                                </p>-->
+<!--                                                <p class="mb-0">Number taken: <span-->
+<!--                                                        class="badge bg-dark"><?php echo $device['number_taken']; ?></span>-->
+<!--                                                </p>-->
+<!--                                            </div>-->
+<!--                                            <div class="h6 text-secondary">-->
+<!--                                                <sub>Date modified: <?php echo $device['date_modified']; ?></sub>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <?php-->
+<!--          }-->
+<!--        }-->
+<!--        ?>-->
+<!--            &lt;!&ndash; ./End of loop &ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!-- ************************ All Actuators ************************ -->
+<section class="p-3 bg-secondary text-white my-5" id="actuators">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">Actuators</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cards for all actuators -->
+<!--<section class="p-2">-->
+<!--    <div class="container">-->
+<!--        <div class="row g-4">-->
+<!-- Start of loop -->
+<!--            <?php-->
+<!--          if (mysqli_num_rows($others) == 0){-->
+<!--            echo "<p class='lead'>No device added yet.</p>";-->
+<!--            }else{-->
+<!--            while ($device = mysqli_fetch_assoc($actuators)){-->
+
+<!--            ?>-->
+<!--            <div class="col-md-6 text-center">-->
+<!--                <div class="card">-->
+<!--                    <div class="row my-auto">-->
+<!--                        <div class="col">-->
+<!--                            <div class="card-body">-->
+<!--                                <div class="accordion accordion-flush">-->
+<!--                                    <div class="accordion-item">-->
+<!--                                        <h2 class="accordion-header">-->
+<!--                                            <button-->
+<!--                                                    class="accordion-button collapsed"-->
+<!--                                                    type="button"-->
+<!--                                                    data-bs-toggle="collapse"-->
+<!--                                                    data-bs-target="#actuators<?php echo $device['device_id']; ?>"-->
+<!--                                            >-->
+<!--                                                &lt;!&ndash; Device name &ndash;&gt;-->
+<!--                                                <?php echo $device['device_name']; ?>-->
+<!--                                            </button>-->
+<!--                                        </h2>-->
+<!--                                        <div-->
+<!--                                                id="actuators<?php echo $device['device_id']; ?>"-->
+<!--                                                class="accordion-collapse collapse"-->
+<!--                                                data-bs-parent="#device<?php echo $device['device_id']; ?>"-->
+<!--                                        >-->
+<!--                                            <div class="accordion-body text-start">-->
+<!--                                                &lt;!&ndash; Device type &ndash;&gt;-->
+<!--                                                <p class="text-uppercase my-1 h6 mb-3">-->
+<!--                                                    <sub><strong><?php echo $device['device_type']; ?></strong></sub>-->
+<!--                                                </p>-->
+<!--                                                &lt;!&ndash; Device description &ndash;&gt;-->
+<!--                                                <?php echo $device['device_description']; ?>-->
+<!--                                                &lt;!&ndash; Number taken &ndash;&gt;-->
+<!--                                                <p class="mb-0 mt-3">Quantity: <span-->
+<!--                                                        class="badge bg-secondary"><?php echo $device['device_quantity']; ?></span>-->
+<!--                                                </p>-->
+<!--                                                <p class="mb-0">Number taken: <span-->
+<!--                                                        class="badge bg-dark"><?php echo $device['number_taken']; ?></span>-->
+<!--                                                </p>-->
+<!--                                            </div>-->
+<!--                                            <div class="h6 text-secondary">-->
+<!--                                                <sub>Date modified: <?php echo $device['date_modified']; ?></sub>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <?php-->
+<!--          }-->
+<!--        }-->
+<!--        ?>-->
+<!--            &lt;!&ndash; ./End of loop &ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!-- *********************** All Others ************************ -->
+<section class="p-3 bg-secondary text-white my-5" id="others">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">Others</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--&lt;!&ndash; Cards for all others &ndash;&gt;-->
+<!--<section class="p-2">-->
+<!--    <div class="container">-->
+<!--        <div class="row g-4">-->
+<!--            &lt;!&ndash; Start of loop &ndash;&gt;-->
+<!--&lt;!&ndash;            <?php&ndash;&gt;-->
+<!--&lt;!&ndash;          if (mysqli_num_rows($others) == 0){&ndash;&gt;-->
+<!--&lt;!&ndash;            echo "<p class='lead'>No device added yet.</p>";&ndash;&gt;-->
+<!--&lt;!&ndash;            }else{&ndash;&gt;-->
+<!--&lt;!&ndash;            while ($device = mysqli_fetch_assoc($others)){&ndash;&gt;-->
+
+<!--&lt;!&ndash;            ?>&ndash;&gt;-->
+<!--            <div class="col-md-6 text-center">-->
+<!--                <div class="card">-->
+<!--                    <div class="row my-auto">-->
+<!--                        <div class="col">-->
+<!--                            <div class="card-body">-->
+<!--                                <div class="accordion accordion-flush">-->
+<!--                                    <div class="accordion-item">-->
+<!--                                        <h2 class="accordion-header" id="flush-headingOne">-->
+<!--                                            <button-->
+<!--                                                    class="accordion-button collapsed"-->
+<!--                                                    type="button"-->
+<!--                                                    data-bs-toggle="collapse"-->
+<!--                                                    data-bs-target="#other<?php echo $device['device_id']; ?>"-->
+<!--                                            >-->
+<!--                                                &lt;!&ndash; Device name &ndash;&gt;-->
+<!--                                                <?php echo $device['device_name']; ?>-->
+<!--                                            </button>-->
+<!--                                        </h2>-->
+<!--                                        <div-->
+<!--                                                id="other<?php echo $device['device_id']; ?>"-->
+<!--                                                class="accordion-collapse collapse"-->
+<!--                                                data-bs-parent="#device<?php echo $device['device_id']; ?>"-->
+<!--                                        >-->
+<!--                                            <div class="accordion-body text-start">-->
+<!--                                                &lt;!&ndash; Device type &ndash;&gt;-->
+<!--                                                <p class="text-uppercase my-1 h6 mb-3">-->
+<!--                                                    <sub><strong><?php echo $device['device_type']; ?></strong></sub>-->
+<!--                                                </p>-->
+<!--                                                &lt;!&ndash; Device description &ndash;&gt;-->
+<!--                                                <?php echo $device['device_description']; ?>-->
+<!--                                                &lt;!&ndash; Number taken &ndash;&gt;-->
+<!--                                                <p class="mb-0 mt-3">Quantity: <span-->
+<!--                                                        class="badge bg-secondary"><?php echo $device['device_quantity']; ?></span>-->
+<!--                                                </p>-->
+<!--                                                <p class="mb-0">Number taken: <span-->
+<!--                                                        class="badge bg-dark"><?php echo $device['number_taken']; ?></span>-->
+<!--                                                </p>-->
+<!--                                            </div>-->
+<!--                                            <div class="h6 text-secondary">-->
+<!--                                                <sub>Date modified: <?php echo $device['date_modified']; ?></sub>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <?php-->
+<!--          }-->
+<!--        }-->
+<!--        ?>-->
+<!--            &lt;!&ndash; ./End of loop &ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
+
+<!-- Footer -->
+<div th:replace="footer :: footer_copy"></div>
+
+</body>
+</html>
+
+<script>
+    // function validate(){
+    //   var password = document.getElementById('password').value;
+    //   if(password.trim() == ''){
+    //     alert("Password filed cannot be left empty!");
+    //     return false;
+    //   }
+    // }
+
+    // function getMaxValue(){
+    //   // Get select field
+    //   var device = document.getElementById('device');
+    //   // Get select options
+    //   var options = device.options;
+    //   // Get value of selected option id
+    //   var maxVal = options[options.selectedIndex].id;
+    //   // Get number field
+    //   // Set max value
+    //   numField = document.getElementById("device_count").max = maxVal;
+    // }
+
+    // function validate_password(){
+    //   var password = document.getElementById('password_validate').value;
+    //   if(password.trim() == ''){
+    //     alert("Password filed cannot be left empty!");
+    //     return false;
+    //   }
+    // }
+</script>

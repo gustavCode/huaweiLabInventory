@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Huawei Lab Inventory</title>
+    <!-- Style sheets-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+    <link crossorigin="anonymous"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
+          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN"
+          rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css"/>
+    <!-- Javascript-->
+    <script th:src="@{/js/jquery-3.6.0.min.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="admin_header :: header_admin"></div>
+
+<!-- All Devices -->
+<section class="p-3 bg-dark text-white mb-5" id="devices">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">All Devices</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cards for all devices -->
+<section class="p-2">
+    <div class="container">
+        <div class="row g-4">
+
+            <th:block th:each="device : ${listAllDevices}">
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="row my-auto">
+                            <div class="col">
+                                <div class="card-body">
+                                    <div class="accordion accordion-flush">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                                        th:data-bs-target="'#device' + ${device.deviceID}"
+                                                        type="button">
+                                                    [[${device.deviceName}]]
+                                                </button>
+                                            </h2>
+                                            <div class="accordion-collapse collapse"
+                                                 th:data-bs-parent="'#device' + ${device.deviceID}"
+                                                 th:id="'device' + ${device.deviceID}">
+                                                <div class="accordion-body text-start">
+                                                    <!-- Device type -->
+                                                    <p class="text-uppercase my-1 h6 mb-3">
+                                                        <sub><strong>[[${device.deviceType}]]</strong></sub>
+                                                    </p>
+                                                    <!-- Device description -->
+                                                    [[${device.deviceDescription}]]
+                                                    <!-- Number taken -->
+                                                    <p class="mb-0 mt-3">Quantity:
+                                                        <span class="badge bg-secondary">[[${device.deviceQuantity}]]</span>
+                                                    </p>
+                                                    <p class="mb-0">Number taken:
+                                                        <span class="badge bg-dark">[[${device.numberTaken}]]</span>
+                                                    </p>
+                                                </div>
+                                                <div class="h6 text-secondary">
+                                                    <sub>Date modified: [[${device.dateModified}]]</sub>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-start m-3">
+                                <div>
+                                    <a th:href="@{/admin/getOne/(id=${device.deviceID})}" class="btn btn-dark edit-btn"
+                                       data-bs-toggle="modal">
+                                        Edit
+                                    </a>
+                                </div>
+                                <div class="ps-2">
+                                    <a class="btn btn-danger" th:href="@{/admin/delete/{id}/(id=${device.deviceID})}"
+                                       onclick="return confirm('You are deleting the device completely from the platform!');">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for editing device -->
+                <div class="modal fade" id="editDeviceModal" tabindex="-1" role="dialog"
+                     aria-labelledby="editDeviceLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content text-center">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Device</h5>
+                                <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <form class="form text-center" method="put" th:action="@{/admin/update}">
+                                    <!-- Hidden ID -->
+                                    <input hidden id="edit_device_id" name="deviceID" th:value="${device.deviceID}"
+                                           type="number"/>
+
+                                    <!-- Device name -->
+                                    <div class="form-group mb-4">
+                                        <label class="lead" for="edit_device_name"> Device Name </label>
+                                        <input class="form-control" id="edit_device_name" name="deviceName"
+                                               type="text"/>
+                                    </div>
+
+                                    <!-- Device description -->
+                                    <div class="form-group">
+                                        <label class="lead" for="edit_device_description">Device Description</label>
+                                        <textarea class="form-control mb-4" id="edit_device_description"
+                                                  name="deviceDescription"
+                                                  rows="3"></textarea>
+                                    </div>
+
+                                    <!-- Device type -->
+                                    <div class="form-group mb-4">
+                                        <label class="lead" for="edit_device_type"> Device Type </label>
+                                        <select class="form-control mb-4" id="edit_device_type"
+                                                name="deviceType">
+                                            <option value="microcontroller">Microcontroller</option>
+                                            <option value="sensor">Sensor</option>
+                                            <option value="actuator">Actuator</option>
+                                            <option value="other">Other</option>
+                                        </select>
+
+                                    </div>
+
+                                    <!-- Device Quantity -->
+                                    <div class="form-group mb-4">
+                                        <label class="lead" for="edit_device_quantity">Device Quantity</label>
+                                        <input class="form-control mb-4" id="edit_device_quantity" min="0"
+                                               name="deviceQuantity" type="number"/>
+                                    </div>
+                                    <input class="btn btn-dark rounded-pill px-5" name="update_device_submit"
+                                           type="submit"
+                                           value="Update"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+
+    </div>
+</section>
+
+<!-- ************************* All Microcontrollers ******************************* -->
+<section class="p-3 bg-secondary text-white my-5" id="microcontrollers">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">Microcontrollers</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cards for all microcontrollers -->
+<section class="p-2">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Beginning of loop -->
+            <th:block th:each="device : ${listDeviceMicrocontroller}">
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="row my-auto">
+                            <div class="col">
+                                <div class="card-body">
+                                    <div class="accordion accordion-flush">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                                        th:data-bs-target="'#microcontroller' + ${device.deviceID}"
+                                                        type="button">
+                                                    [[${device.deviceName}]]
+                                                </button>
+                                            </h2>
+                                            <div class="accordion-collapse collapse"
+                                                 th:data-bs-parent="'#device' + ${device.deviceID}"
+                                                 th:id="'microcontroller' + ${device.deviceID}">
+                                                <div class="accordion-body text-start">
+                                                    <!-- Device type -->
+                                                    <p class="text-uppercase my-1 h6 mb-3">
+                                                        <sub><strong>[[${device.deviceType}]]</strong></sub>
+                                                    </p>
+                                                    <!-- Device description -->
+                                                    [[${device.deviceDescription}]]
+                                                    <!-- Number taken -->
+                                                    <p class="mb-0 mt-3">Quantity:
+                                                        <span class="badge bg-secondary">[[${device.deviceQuantity}]]</span>
+                                                    </p>
+                                                    <p class="mb-0">Number taken:
+                                                        <span class="badge bg-dark">[[${device.numberTaken}]]</span>
+                                                    </p>
+                                                </div>
+                                                <div class="h6 text-secondary">
+                                                    <sub>Date modified: [[${device.dateModified}]]</sub>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-start m-3">
+                                <div>
+                                    <a th:href="@{/admin/getOne/(id=${device.deviceID})}" class="btn btn-dark edit-btn"
+                                       data-bs-toggle="modal">
+                                        Edit
+                                    </a>
+                                </div>
+                                <div class="ps-2">
+                                    <a class="btn btn-danger" th:href="@{/admin/delete/{id}/(id=${device.deviceID})}"
+                                       onclick="return confirm('You are deleting the device completely from the platform!');">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./End of loop -->
+            </th:block>
+        </div>
+    </div>
+</section>
+
+<!-- ************************ All Sensors ************************* -->
+<section class="p-3 bg-secondary text-white my-5" id="sensors">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">Sensors</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cards for all sensors -->
+<section class="p-2">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Beginning of loop -->
+            <th:block th:each="device : ${listDeviceSensor}">
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="row my-auto">
+                            <div class="col">
+                                <div class="card-body">
+                                    <div class="accordion accordion-flush">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                                        th:data-bs-target="'#sensor' + ${device.deviceID}"
+                                                        type="button">
+                                                    [[${device.deviceName}]]
+                                                </button>
+                                            </h2>
+                                            <div class="accordion-collapse collapse"
+                                                 th:data-bs-parent="'#device' + ${device.deviceID}"
+                                                 th:id="'sensor' + ${device.deviceID}">
+                                                <div class="accordion-body text-start">
+                                                    <!-- Device type -->
+                                                    <p class="text-uppercase my-1 h6 mb-3">
+                                                        <sub><strong>[[${device.deviceType}]]</strong></sub>
+                                                    </p>
+                                                    <!-- Device description -->
+                                                    [[${device.deviceDescription}]]
+                                                    <!-- Number taken -->
+                                                    <p class="mb-0 mt-3">Quantity: <span
+                                                            class="badge bg-secondary">[[${device.deviceQuantity}]]</span>
+                                                    </p>
+                                                    <p class="mb-0">Number taken: <span
+                                                            class="badge bg-dark">[[${device.numberTaken}]]</span>
+                                                    </p>
+                                                </div>
+                                                <div class="h6 text-secondary">
+                                                    <sub>Date modified: [[${device.dateModified}]]</sub>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-start m-3">
+                                <div>
+                                    <a th:href="@{/admin/getOne/(id=${device.deviceID})}" class="btn btn-dark edit-btn"
+                                       data-bs-toggle="modal">
+                                        Edit
+                                    </a>
+                                </div>
+                                <div class="ps-2">
+                                    <a class="btn btn-danger" th:href="@{/admin/delete/{id}/(id=${device.deviceID})}"
+                                       onclick="return confirm('You are deleting the device completely from the platform!');">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./End of loop -->
+            </th:block>
+        </div>
+    </div>
+</section>
+
+<!-- ************************ All Actuators ************************ -->
+<section class="p-3 bg-secondary text-white my-5" id="actuators">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">Actuators</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cards for all actuators -->
+<section class="p-2">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Start of loop -->
+            <th:block th:each="device : ${listDeviceActuator}">
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="row my-auto">
+                            <div class="col">
+                                <div class="card-body">
+                                    <div class="accordion accordion-flush">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                                        th:data-bs-target="'#actuators' + ${device.deviceID}"
+                                                        type="button">
+                                                    [[${device.deviceName}]]
+                                                </button>
+                                            </h2>
+                                            <div class="accordion-collapse collapse"
+                                                 th:data-bs-parent="'#device' + ${device.deviceID}"
+                                                 th:id="'actuators' + ${device.deviceID}">
+                                                <div class="accordion-body text-start">
+                                                    <!-- Device type -->
+                                                    <p class="text-uppercase my-1 h6 mb-3">
+                                                        <sub><strong>[[${device.deviceType}]]</strong></sub>
+                                                    </p>
+                                                    <!-- Device description -->
+                                                    [[${device.deviceDescription}]]
+                                                    <!-- Number taken -->
+                                                    <p class="mb-0 mt-3">Quantity:
+                                                        <span class="badge bg-secondary">[[${device.deviceQuantity}]]</span>
+                                                    </p>
+                                                    <p class="mb-0">Number taken:
+                                                        <span class="badge bg-dark">[[${device.numberTaken}]]</span>
+                                                    </p>
+                                                </div>
+                                                <div class="h6 text-secondary">
+                                                    <sub>Date modified: [[${device.dateModified}]]</sub>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-start m-3">
+                                <div>
+                                    <a th:href="@{/admin/getOne/(id=${device.deviceID})}" class="btn btn-dark edit-btn"
+                                       data-bs-toggle="modal">
+                                        Edit
+                                    </a>
+                                </div>
+                                <div class="ps-2">
+                                    <a class="btn btn-danger" th:href="@{/admin/delete/{id}/(id=${device.deviceID})}"
+                                       onclick="return confirm('You are deleting the device completely from the platform!');">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./End of loop -->
+            </th:block>
+        </div>
+    </div>
+</section>
+
+<!-- *********************** All Others ************************ -->
+<section class="p-3 bg-secondary text-white my-5" id="others">
+    <div class="container">
+        <div class="text-center">
+            <div>
+                <h3 class="display-4">Others</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cards for all others -->
+<section class="p-2 pb-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Start of loop -->
+            <th:block th:each="device : ${listDeviceByOther}">
+                <div class="col-md-6 text-center">
+                    <div class="card">
+                        <div class="row my-auto">
+                            <div class="col">
+                                <div class="card-body">
+                                    <div class="accordion accordion-flush">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                                        th:data-bs-target="'#other' + ${device.deviceID}"
+                                                        type="button">
+                                                    [[${device.deviceName}]]
+                                                </button>
+                                            </h2>
+                                            <div class="accordion-collapse collapse"
+                                                 th:data-bs-parent="'#device' + ${device.deviceID}"
+                                                 th:id="'other' + ${device.deviceID}">
+                                                <div class="accordion-body text-start">
+                                                    <!-- Device type -->
+                                                    <p class="text-uppercase my-1 h6 mb-3">
+                                                        <sub><strong>[[${device.deviceType}]]</strong></sub>
+                                                    </p>
+                                                    <!-- Device description -->
+                                                    [[${device.deviceDescription}]]
+                                                    <!-- Number taken -->
+                                                    <p class="mb-0 mt-3">Quantity:
+                                                        <span class="badge bg-secondary">[[${device.deviceQuantity}]]</span>
+                                                    </p>
+                                                    <p class="mb-0">Number taken:
+                                                        <span class="badge bg-dark">[[${device.numberTaken}]]</span>
+                                                    </p>
+                                                </div>
+                                                <div class="h6 text-secondary">
+                                                    <sub>Date modified: [[${device.dateModified}]]</sub>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-start m-3">
+                                <div>
+                                    <a th:href="@{/admin/getOne/(id=${device.deviceID})}" class="btn btn-dark edit-btn"
+                                       data-bs-toggle="modal">
+                                        Edit
+                                    </a>
+                                </div>
+                                <div class="ps-2">
+                                    <a class="btn btn-danger" th:href="@{/admin/delete/{id}/(id=${device.deviceID})}"
+                                       onclick="return confirm('You are deleting the device completely from the platform!');">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./End of loop -->
+            </th:block>
+        </div>
+    </div>
+</section>
+
+<!-- Modal for adding new device -->
+<div class="modal fade" id="addDevice" tabindex="-1">
+    <form class="form text-center mb-3" method="post" th:action="@{/admin/add_device}">
+        <div class="modal-dialog">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Device</h5>
+                    <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group mb-4">
+                        <label class="lead" for="device_name"> Device Name </label>
+                        <input class="form-control" id="device_name" name="deviceName" type="text"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="lead" for="device_description"> Device Description </label>
+                        <textarea class="form-control mb-4" id="device_description" name="deviceDescription" rows="3">
+                            </textarea>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="lead" for="device_type"> Device Type </label>
+                        <select class="form-control mb-4" id="device_type" name="deviceType">
+                            <option selected value="microcontroller">Microcontroller</option>
+                            <option value="sensor">Sensor</option>
+                            <option value="actuator">Actuator</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="lead" for="device_quantity"> Device Quantity </label>
+                        <input class="form-control mb-4" id="device_quantity" min="0" name="deviceQuantity"
+                               type="number" value="0"/>
+                    </div>
+
+                    <input class="btn btn-dark rounded-pill px-5" name="add_device_submit" type="submit" value="Save"/>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- ********************* SUMMARY ******************* -->
+<section class="container mt-5">
+    <div class="row g-4">
+        <div class="col-lg">
+            <!-- People with devices button -->
+            <div class="text-center" id="people_with_devices">
+                <button class="btn btn-secondary rounded-pill px-4" data-bs-toggle="modal"
+                        data-bs-target="#deviceWithPeople">
+                    <i class="bi bi-card-list"></i> Summary of people with devices
+                </button>
+            </div>
+        </div>
+
+        <div class="col-lg">
+            <!-- Requests for devices -->
+            <div class="text-center" id="requests_button">
+                <button class="btn btn-secondary rounded-pill px-4" data-bs-toggle="modal"
+                        data-bs-target="#deviceRequests">
+                    <i class="bi bi-list"></i> All device requests
+                </button>
+            </div>
+        </div>
+
+        <div class="col-lg">
+            <!-- History of devices ever_taken -->
+            <div class="text-center" id="requests_button">
+                <button class="btn btn-dark rounded-pill px-4" data-bs-toggle="modal"
+                        data-bs-target="#deviceTakenHistory">
+                    <i class="bi bi-calendar-range"></i> History of devices taken
+                </button>
+            </div>
+        </div>
+
+        <div class="col-lg">
+            <!-- History of devices ever -->
+            <div class="text-center" id="requests_button">
+                <button class="btn btn-dark rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#deviceHistory">
+                    <i class="bi bi-archive"></i> Device archive
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Modal for displaying devices with people -->
+<div class="modal fade" id="deviceWithPeople" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-start">
+            <div class="modal-header">
+                <h5 class="modal-title">People With Devices</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p class='lead'>No device has been taken</p>";
+
+                <ul class='list-group list-group-flush'>
+                    <li class="list-group-item">
+                        <p class="m-0 h6"><?php echo $name; ?></p>
+                        <div>
+                            <div class="d-flex align-text-center justify-content-between mb-0">
+                                <p class="m-0 p-0"><?php echo $user_with_device['device_name']; ?></p>
+                                <i class="bi bi-dash-lg"></i>
+                                <p class="p-0 m-0">x3</p>
+                            </div>
+                            <sup class="mt-0" style="font-size: 10px;">
+                                Date taken: <?php echo $user_with_device['dt_date_taken']; ?>
+                            </sup>
+                            <p>
+                                <a href="assets/raw_php/device_returned.php?dt_id=<?php echo $user_with_device['dt_id']; ?>&numTaken=<?php echo $user_with_device['number_taken']; ?>&quantity=<?php echo $user_with_device['dt_quantity']; ?>&device_id=<?php echo $user_with_device['device_id']; ?>"
+                                   class="text-dark btn btn-secondary text-white rounded-pill py-1">
+                                    Device returned <i class="bi bi-arrow-bar-left"></i>
+                                </a>
+                            </p>
+                        </div>
+                    </li>
+
+                    <!-- <ul class="list-group list-group-flush">
+
+                      <li class="list-group-item">
+                        <p class="m-0 h6">Person's name</p>
+                        <div>
+                          <div class="d-flex align-text-center justify-content-between mb-0">
+                            <p class="m-0 p-0">Lorem ipsum dolor sit amet consectetur</p>
+                            <i class="bi bi-dash-lg"></i>
+                            <p class="p-0 m-0">x3</p>
+                          </div>
+                          <sup class="mt-0" style="font-size: 10px;">Date taken: 01/01/2021</sup>
+                          <p><a href="#" class="text-dark btn btn-secondary text-white rounded-pill py-1">Device returned <i class="bi bi-arrow-bar-left"></i></a></p>
+                        </div>
+                      </li>
+
+                    </ul> -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ./Modal for displaying devices with people -->
+
+
+<!-- Modal for displaying user device requests -->
+<div class="modal fade" id="deviceRequests" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content text-start">
+            <div class="modal-header">
+                <h5 class="modal-title">All Device Requests</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p th:if="${requestsPending.isEmpty()}" class="lead">No Request made yet</p>
+
+                <ul class="list-group list-group-flush">
+                    <li th:each="requestedDevice : ${requestsPending}" class="list-group-item">
+                        <p class="m-0 h6">
+                            [[${requestedDevice.user.lastName}]] [[${requestedDevice.user.otherNames}]]
+                        </p>
+                        <div>
+                            <div class="d-flex align-text-center justify-content-between mb-3">
+                                <p class="m-0 p-0">[[${requestedDevice.device.deviceName}]]</p>
+                                <i class="bi bi-dash-lg"></i>
+                                <p class="p-0 m-0">x[[${requestedDevice.requestQuantity}]]</p>
+                            </div>
+                            <p>
+                                <a th:href="@{/admin/accept_request/{id}/(id=${requestedDevice.requestID})}"
+                                   class="text-dark btn btn-secondary text-white rounded-pill py-1">
+                                    Accept request
+                                    <i class="bi bi-check-lg"></i>
+                                </a>
+                                <a th:href="@{/admin/decline_request/{id}/(id=${requestedDevice.requestID})}"
+                                   class="text-dark btn btn-secondary text-white rounded-pill py-1">
+                                    Decline request
+                                    <i class="bi bi-x-lg"></i>
+                                </a>
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ./Modal for displaying user device request-->
+
+
+<!-- Modal for displaying history of devices taken -->
+<div class="modal fade" id="deviceTakenHistory" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content text-start">
+            <div class="modal-header">
+                <h5 class="modal-title">History of devices taken</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p th:if="${allDeviceTakenList.isEmpty()}" class="lead">No device taken yet</p>
+
+                <ul class='list-group list-group-flush'>
+
+                    <li th:each="takenDevice : ${allDeviceTakenList}" class="list-group-item">
+                        <p class="m-0 h6">[[${takenDevice.user.lastName}]] [[${takenDevice.user.otherNames}]]</p>
+                        <div>
+                            <div class="d-flex align-text-center justify-content-between mb-0">
+                                <p class="m-0 p-0">[[${takenDevice.device.deviceName}]]</p>
+                                <i class="bi bi-dash-lg"></i>
+                                <p class="p-0 m-0">x[[${takenDevice.deviceTakenQuantity}]]</p>
+                            </div>
+                            <sup class="mt-0" style="font-size: 10px;">
+                                Date taken: [[${takenDevice.deviceTaken_DateTaken}]]
+                            </sup>
+                            <br/>
+                            <sup class="mt-0" style="font-size: 10px;">
+                                Date returned: [[${takenDevice.deviceTaken_DateReturned}]]
+                            </sup>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ./Modal for displaying history of devices taken -->
+
+
+<!--    &lt;!&ndash; Modal for displaying history of devices &ndash;&gt;-->
+<!--    <div class="modal fade" id="deviceHistory" tabindex="-1">-->
+<!--        <div class="modal-dialog">-->
+<!--            <div class="modal-content text-start">-->
+<!--                <div class="modal-header">-->
+<!--                    <h5 class="modal-title">History of devices in the lab</h5>-->
+<!--                    <button-->
+<!--                            type="button"-->
+<!--                            class="btn-close"-->
+<!--                            data-bs-dismiss="modal"-->
+<!--                    ></button>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+
+<!--                    <?php-->
+<!--              if (mysqli_num_rows($device_history) == 0){-->
+<!--                echo "<p class='lead'>No history yet</p>";-->
+<!--                    }else{-->
+<!--                    echo "<ul class='list-group list-group-flush'>";-->
+<!--                    while ($history = mysqli_fetch_assoc($device_history)){-->
+<!--                    ?>-->
+<!--                    <li class="list-group-item">-->
+<!--                        <p class="m-0 h6"><?php echo $history['device_name']; ?></p>-->
+<!--                        <div>-->
+<!--                            <div class="mb-0">-->
+<!--                                <p class="m-0 p-0"><?php echo $history['device_description']; ?></p>-->
+<!--                            </div>-->
+<!--                            <sup class="mt-0 btn-dark rounded-pill px-2" style="font-size: 10px;"><?php echo $history['device_type']; ?></sup>-->
+<!--                            <sup class="mt-0">Quantity: <?php echo $history['device_quantity']; ?></sup>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                    <?php-->
+<!--                }-->
+<!--              }-->
+<!--            ?>-->
+
+<!--                </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; ./Modal for displaying history of devices taken &ndash;&gt;-->
+
+
+<!--    &lt;!&ndash; Add Device Alert &ndash;&gt;-->
+<!--    <?php-->
+<!--        if (isset($_SESSION['add_device_message'])) {-->
+<!--    ?>-->
+<!--    <script>-->
+<!--        setTimeout(() => {alert('<?php echo($_SESSION['add_device_message']); ?>'); }, 500);-->
+<!--    </script>-->
+<!--    <?php-->
+<!--        }$_SESSION['add_device_message'] = null;-->
+<!--    ?>-->
+
+<!--    &lt;!&ndash; Update Device Alert &ndash;&gt;-->
+<!--    <?php-->
+<!--        if (isset($_SESSION['update_device_message'])) {-->
+<!--    ?>-->
+<!--    <script>-->
+<!--        setTimeout(() => {alert('<?php echo($_SESSION['update_device_message']); ?>'); }, 500);-->
+<!--    </script>-->
+<!--    <?php-->
+<!--        }$_SESSION['update_device_message'] = null;-->
+<!--    ?>-->
+
+<!--    &lt;!&ndash; Accept Request Alert &ndash;&gt;-->
+<!--    <?php-->
+<!--        if (isset($_SESSION['accept_request_message'])) {-->
+<!--    ?>-->
+<!--    <script>-->
+<!--        setTimeout(() => {alert('<?php echo($_SESSION['accept_request_message']); ?>'); }, 500);-->
+<!--    </script>-->
+<!--    <?php-->
+<!--        }$_SESSION['accept_request_message'] = null;-->
+<!--    ?>-->
+
+<!--    &lt;!&ndash; Decline Request Alert &ndash;&gt;-->
+<!--    <?php-->
+<!--        if (isset($_SESSION['decline_request_message'])) {-->
+<!--    ?>-->
+<!--    <script>-->
+<!--        setTimeout(() => {alert('<?php echo($_SESSION['decline_request_message']); ?>'); }, 500);-->
+<!--    </script>-->
+<!--    <?php-->
+<!--        }$_SESSION['decline_request_message'] = null;-->
+<!--    ?>-->
+
+<!--    &lt;!&ndash; Device Returned Alert &ndash;&gt;-->
+<!--    <?php-->
+<!--        if (isset($_SESSION['device_returned_message'])) {-->
+<!--    ?>-->
+<!--    <script>-->
+<!--        setTimeout(() => {alert('<?php echo($_SESSION['device_returned_message']); ?>'); }, 500);-->
+<!--    </script>-->
+<!--    <?php-->
+<!--        }$_SESSION['device_returned_message'] = null;-->
+<!--    ?>-->
+
+<!--    &lt;!&ndash; Device Deleted Alert &ndash;&gt;-->
+<!--    <?php-->
+<!--        if (isset($_SESSION['delete_device_message'])) {-->
+<!--    ?>-->
+<!--    <script>-->
+<!--        setTimeout(() => {alert('<?php echo($_SESSION['delete_device_message']); ?>'); }, 500);-->
+<!--    </script>-->
+<!--    <?php-->
+<!--        }$_SESSION['delete_device_message'] = null;-->
+<!--    ?>-->
+
+
+<!-- Footer -->
+<div th:replace="footer :: footer_copy"></div>
+
+</body>
+</html>

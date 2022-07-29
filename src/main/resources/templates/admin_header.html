@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<header th:fragment="header_admin" class="header">
+    <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow">
+        <div class="container">
+            <div class="navbar-brand">HUAWEI LAB INVENTORY</div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a href="#devices" class="nav-link">All Devices</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#microcontrollers" class="nav-link">Microcontrollers</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#sensors" class="nav-link">Sensors</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#actuators" class="nav-link">Actuators</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#others" class="nav-link">Others</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#addDevice">
+                            Add Device
+                        </button>
+                    </li>
+
+                    <li class="nav-item p-2 pt-0 pb-0">
+                        <form th:action="@{/logout}" method="post">
+                            <input type="submit" class="btn btn-danger" value="Logout"/>
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+</html>
