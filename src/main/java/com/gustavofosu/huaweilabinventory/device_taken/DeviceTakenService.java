@@ -2,6 +2,7 @@ package com.gustavofosu.huaweilabinventory.device_taken;
 
 import com.gustavofosu.huaweilabinventory.device.DeviceService;
 import com.gustavofosu.huaweilabinventory.device.HLabDevices;
+import com.gustavofosu.huaweilabinventory.device.HLabDevicesRepository;
 import com.gustavofosu.huaweilabinventory.request.HLabRequests;
 import com.gustavofosu.huaweilabinventory.request.HLabRequestsRepository;
 import com.gustavofosu.huaweilabinventory.user.HLabUsers;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,15 +22,17 @@ public class DeviceTakenService {
     private final HLabUsersRepository hLabUsersRepository;
     private final DeviceService deviceService;
     private final HLabRequestsRepository hLabRequestsRepository;
+    private final HLabDevicesRepository hLabDevicesRepository;
     private final HLabDeviceTakenRepository hLabDeviceTakenRepository;
 
     public DeviceTakenService(HLabDeviceTakenRepository deviceTakenRepository, HLabUsersRepository hLabUsersRepository,
                               DeviceService deviceService, HLabRequestsRepository hLabRequestsRepository,
-                              HLabDeviceTakenRepository hLabDeviceTakenRepository) {
+                              HLabDevicesRepository hLabDevicesRepository, HLabDeviceTakenRepository hLabDeviceTakenRepository) {
         this.deviceTakenRepository = deviceTakenRepository;
         this.hLabUsersRepository = hLabUsersRepository;
         this.deviceService = deviceService;
         this.hLabRequestsRepository = hLabRequestsRepository;
+        this.hLabDevicesRepository = hLabDevicesRepository;
         this.hLabDeviceTakenRepository = hLabDeviceTakenRepository;
     }
 
@@ -58,6 +62,10 @@ public class DeviceTakenService {
 
         Long deviceId = request.getDevice().getDeviceID();
         HLabDevices labDevice = deviceService.getDeviceById(deviceId).get();
+        labDevice.setNumberTaken(labDevice.getNumberTaken() + request.getRequestQuantity());
+        labDevice.setDeviceQuantity(labDevice.getDeviceQuantity() - request.getRequestQuantity());
+        labDevice.setDateModified(LocalDateTime.now());
+        hLabDevicesRepository.save(labDevice);
         deviceTaken.setDevice(labDevice);
 
         hLabDeviceTakenRepository.save(deviceTaken);
