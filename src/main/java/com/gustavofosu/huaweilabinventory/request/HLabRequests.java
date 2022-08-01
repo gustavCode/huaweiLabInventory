@@ -10,8 +10,8 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Getter                 // Annotation to add getters for the fields
+@Setter                 // Annotation to add setters for the fields
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "requests")
@@ -28,9 +28,9 @@ public class HLabRequests {
             strategy = GenerationType.SEQUENCE,
             generator = "request_sequence"
     )
-    private Long requestID;
-    private int requestQuantity;
-    private String requestStatus;
+    private Long requestID;                 // id for device request
+    private int requestQuantity;            // quantity of device requested
+    private String requestStatus;           // status of device requested
 
     @ManyToOne(
             cascade = CascadeType.PERSIST
@@ -39,7 +39,7 @@ public class HLabRequests {
             name = "user_id",
             referencedColumnName = "userID"
     )
-    private HLabUsers user;
+    private HLabUsers user;                 // user who requested for the device
 
     @ManyToOne(
             cascade = CascadeType.PERSIST
@@ -48,5 +48,5 @@ public class HLabRequests {
             name = "device_id",
             referencedColumnName = "deviceID"
     )
-    private HLabDevices device;
+    private HLabDevices device;             // device that was requested
 }

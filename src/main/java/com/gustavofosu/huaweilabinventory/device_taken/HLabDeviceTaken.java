@@ -11,8 +11,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
+@Getter             // Annotation to add getters for the fields
+@Setter             // Annotation to add setters for the fields
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "device_taken")
@@ -33,25 +33,25 @@ public class HLabDeviceTaken {
             name = "dt_id",
             nullable = false
     )
-    private Long deviceTakenID;
+    private Long deviceTakenID;             // id of the device taken
 
     @Column(
 
             name = "dt_quantity",
             nullable = false
     )
-    private int deviceTakenQuantity;
+    private int deviceTakenQuantity;      // quantity of the device taken
 
     @Column(
             name = "dt_date_taken",
             nullable = false
     )
-    private LocalDate deviceTaken_DateTaken;
+    private LocalDate deviceTaken_DateTaken;    //date the device was taken
 
     @Column(
             name = "dt_date_returned"
     )
-    private LocalDate deviceTaken_DateReturned;
+    private LocalDate deviceTaken_DateReturned; // date the device was returned
 
     @ManyToOne(
             cascade = CascadeType.PERSIST
@@ -60,7 +60,7 @@ public class HLabDeviceTaken {
             name = "user_id",
             referencedColumnName = "userID"
     )
-    private HLabUsers user;
+    private HLabUsers user;                     // user who took device
 
     @ManyToOne(
             cascade = CascadeType.PERSIST
@@ -69,5 +69,5 @@ public class HLabDeviceTaken {
             name = "device_id",
             referencedColumnName = "deviceID"
     )
-    private HLabDevices device;
+    private HLabDevices device;               // device that was taken
 }

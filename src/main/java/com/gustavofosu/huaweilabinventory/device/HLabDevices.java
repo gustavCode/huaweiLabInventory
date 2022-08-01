@@ -9,8 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Getter             // Annotation to add getters for all fields
+@Setter            // Annotation to add setters for all fields
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "devices")
@@ -27,16 +27,16 @@ public class HLabDevices {
             strategy = GenerationType.SEQUENCE,
             generator = "device_sequence"
     )
-    private Long deviceID;
-    private String deviceName;
-    private String deviceType;
+    private Long deviceID;             // device id
+    private String deviceName;         // name of device
+    private String deviceType;         // type of device
 
     @Column(
             name = "device_description",
             columnDefinition = "TEXT"
     )
-    private String deviceDescription;
-    private int deviceQuantity;
-    private int numberTaken;
-    private LocalDateTime dateModified;
+    private String deviceDescription;   // description of the device
+    private int deviceQuantity;         // quantity of device
+    private int numberTaken;            // number of device taken
+    private LocalDateTime dateModified; // date the device was modified
 }

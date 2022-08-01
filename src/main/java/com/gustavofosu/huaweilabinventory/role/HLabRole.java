@@ -7,8 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Getter                     // Annotation to add getters for fields
+@Setter                     // Annotation to add setters for fields
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -26,17 +26,20 @@ public class HLabRole {
             generator = "role_sequence"
     )
     @Column(name = "role_id")
-    private Long id;
-    private String roleName;
+    private Long id;                // id for the role
+    private String roleName;        // name of the role (ADMIN, USER)
 
+    // constructor that takes id as a parameter
     public HLabRole(Long id) {
         this.id = id;
     }
 
+    //constructor that takes roleName as a parameter
     public HLabRole(String roleName) {
         this.roleName = roleName;
     }
 
+    // toString method that returns the roleName
     @Override
     public String toString() {
         return this.roleName;

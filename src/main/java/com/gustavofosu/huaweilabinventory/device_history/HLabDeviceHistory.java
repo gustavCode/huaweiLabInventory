@@ -1,9 +1,13 @@
 package com.gustavofosu.huaweilabinventory.device_history;
 
 import com.gustavofosu.huaweilabinventory.device.HLabDevices;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Getter                     // Annotation to add getters for the fields
+@Setter                     // Annotation to add setters for the fields
 @Entity
 @Table(name = "device_history")
 public class HLabDeviceHistory {
@@ -23,70 +27,30 @@ public class HLabDeviceHistory {
             name = "dh_id",
             nullable = false
     )
-    private Long deviceHistoryID;
+    private Long deviceHistoryID;               // id of the device history
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "device_name"
     )
-    private HLabDevices deviceName;
+    private HLabDevices deviceName;             // name of device
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "device_type"
     )
-    private HLabDevices deviceType;
+    private HLabDevices deviceType;             // type of device
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "device_description"
     )
-    private HLabDevices deviceDescription;
+    private HLabDevices deviceDescription;      // description of device
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "device_quantity"
     )
-    private HLabDevices deviceQuantity;
+    private HLabDevices deviceQuantity;         // quantity of device
 
-    // == public methods ==
-    public Long getDeviceHistoryID() {
-        return deviceHistoryID;
-    }
-
-    public void setDeviceHistoryID(Long deviceHistoryID) {
-        this.deviceHistoryID = deviceHistoryID;
-    }
-
-    public HLabDevices getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(HLabDevices deviceName) {
-        this.deviceName = deviceName;
-    }
-
-    public HLabDevices getDeviceType() {
-        return deviceType;
-    }
-
-    public void setDeviceType(HLabDevices deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    public HLabDevices getDeviceDescription() {
-        return deviceDescription;
-    }
-
-    public void setDeviceDescription(HLabDevices deviceDescription) {
-        this.deviceDescription = deviceDescription;
-    }
-
-    public HLabDevices getDeviceQuantity() {
-        return deviceQuantity;
-    }
-
-    public void setDeviceQuantity(HLabDevices deviceQuantity) {
-        this.deviceQuantity = deviceQuantity;
-    }
 }
