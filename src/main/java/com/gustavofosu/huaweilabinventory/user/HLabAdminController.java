@@ -87,8 +87,8 @@ public class HLabAdminController {
 
     @RequestMapping(value = "/accept_request/{id}", method = {RequestMethod.POST, RequestMethod.GET})
     public String acceptRequestProcess(HLabDeviceTaken labDeviceTaken, @PathVariable(value = "id") Long id) {
-        requestService.acceptRequest(id);
         deviceTakenService.saveDeviceTaken(labDeviceTaken, id);
+        requestService.acceptRequest(id);
 
         log.info("Accept request processed");
         return "redirect:/admin/dashboard";

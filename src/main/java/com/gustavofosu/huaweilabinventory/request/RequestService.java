@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 @Service
 public class RequestService {
 
@@ -91,9 +92,10 @@ public class RequestService {
     }
 
     public void acceptRequest(Long id) {
-        HLabRequests requests = hLabRequestsRepository.findById(id).get();
-        requests.setRequestStatus("Request Approved");
-        hLabRequestsRepository.save(requests);
+//        HLabRequests requests = hLabRequestsRepository.findById(id).get();
+//        requests.setRequestStatus("Request Approved");
+//        hLabRequestsRepository.save(requests);
+        deleteRequest(id);
     }
 
 
