@@ -5,6 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HLabRoleRepository extends JpaRepository<HLabRole, Long> {
-
-    HLabRole findByRoleName(String roleName);
 }

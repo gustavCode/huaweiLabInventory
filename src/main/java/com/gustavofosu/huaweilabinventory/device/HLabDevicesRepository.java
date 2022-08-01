@@ -9,6 +9,4 @@ import java.util.List;
 public interface HLabDevicesRepository extends JpaRepository<HLabDevices, Long> {
 
     List<HLabDevices> findByDeviceTypeIgnoreCase(String deviceType);
-
-    HLabDevices findHLabDevicesByDeviceName(String deviceName);
 }
