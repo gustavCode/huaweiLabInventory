@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 public class DeviceTakenService {
 
+    // private fields
     private final HLabDeviceTakenRepository deviceTakenRepository;
     private final HLabUsersRepository hLabUsersRepository;
     private final DeviceService deviceService;
@@ -25,6 +26,7 @@ public class DeviceTakenService {
     private final HLabDevicesRepository hLabDevicesRepository;
     private final HLabDeviceTakenRepository hLabDeviceTakenRepository;
 
+    // constructor injection with all fields as parameters
     public DeviceTakenService(HLabDeviceTakenRepository deviceTakenRepository, HLabUsersRepository hLabUsersRepository,
                               DeviceService deviceService, HLabRequestsRepository hLabRequestsRepository,
                               HLabDevicesRepository hLabDevicesRepository, HLabDeviceTakenRepository hLabDeviceTakenRepository) {
@@ -36,10 +38,12 @@ public class DeviceTakenService {
         this.hLabDeviceTakenRepository = hLabDeviceTakenRepository;
     }
 
+    // method to find and return a list of all devices taken
     public List<HLabDeviceTaken> listOfAllDeviceTaken() {
         return deviceTakenRepository.findAll();
     }
 
+    // method to find and return a list of devices taken by user
     public List<HLabDeviceTaken> listOfDeviceTakenByUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUser = authentication.getName();
@@ -48,6 +52,7 @@ public class DeviceTakenService {
         return deviceTakenRepository.findAllByUser(labUser);
     }
 
+    // method to save device taken by user
     public void saveDeviceTaken(HLabDeviceTaken deviceTaken, Long id) {
         HLabRequests request = hLabRequestsRepository.findById(id).get();
         deviceTaken.setDeviceTakenQuantity(request.getRequestQuantity());

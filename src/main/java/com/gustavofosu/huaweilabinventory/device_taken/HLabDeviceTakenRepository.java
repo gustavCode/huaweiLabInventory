@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface HLabDeviceTakenRepository extends JpaRepository<HLabDeviceTaken, Long> {
 
+    // method to find and return all users that have taken a device
     List<HLabDeviceTaken> findAllByUser(HLabUsers user);
 }

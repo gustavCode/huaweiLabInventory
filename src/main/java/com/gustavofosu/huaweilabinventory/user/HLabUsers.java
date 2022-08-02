@@ -10,9 +10,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@SuppressWarnings("WhileLoopReplaceableByForEach")
 @Entity
-@Getter
-@Setter
+@Getter                 // Annotation to add getters for the fields
+@Setter                 // Annotation to add setters for the fields
 @NoArgsConstructor
 @Table(
         name = "users",
@@ -36,18 +37,18 @@ public class HLabUsers {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    private Long userID;
-    private String lastName;
-    private String otherNames;
-    private String indexNumber;
+    private Long userID;                // id for the user
+    private String lastName;            // last name of the user
+    private String otherNames;          // other names of the user
+    private String indexNumber;         // index number of the user
 
     @Column(
             name = "user_name",
             nullable = false,
             columnDefinition = "TEXT"
     )
-    private String username;
-    private String password;
+    private String username;            // username for the user
+    private String password;            // password of the user
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -55,13 +56,15 @@ public class HLabUsers {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userID"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<HLabRole> userRoles = new HashSet<>();
+    private Set<HLabRole> userRoles = new HashSet<>();  //set of roles
 
     // == public methods ==
+    // method to add roles
     public void addRole(HLabRole hLabRole) {
         this.userRoles.add(hLabRole);
     }
 
+    // method to check if user has a role
     public boolean hasRole(String roleName) {
         Iterator<HLabRole> iterator = this.userRoles.iterator();
         while (iterator.hasNext()) {
